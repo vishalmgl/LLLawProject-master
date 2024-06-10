@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Case Analysis Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background-color: #fff;
+            background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        .response {
+            border: 2px solid #4158D0;
+            padding: 20px;
+            margin: 20px 0;
+            background-image: linear-gradient(43deg, #ffffff 0%, #ffffff 46%, #ffffff 100%);
+            color: white;
+        }
+        h2, h4 {
+            color: #333;
+        }
+        ul {
+            line-height: 1.6;
+        }
+        li {
+            background-color: transparent;
+            color: #000000;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+          .case {
+            border: 2px solid #333;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="response">
+            <h2>Key Statements</h2>
+            <ul>
+            {% for point in response_text.split('.') %}
+                {% if point.strip() %}
+                    <li>{{ point.strip() }}.</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <h2>Relevant Cases</h2>
+            {% for case in relevant_cases %}
+                     <div class="case">
+                    <h4>Similarity Score: {{ case[0] }}</h4>
+                    <h4>File Name: {{ basename(case[1]) }}</h4>
+                    <p>File Content: {{ case[2] }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

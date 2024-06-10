@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant for your cases</title>
+    <style>
+        body {
+            background-color: #4158D0;
+            background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: 'Rubik', sans-serif; /* Apply Rubik font to the entire body */
+            color: white; /* Set default text color */
+        }
+
+        .title {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            border-radius: 43px;
+            background: #e3e3e3;
+            box-shadow: -12px -12px 76px #bcbcbc, 12px 12px 76px #ffffff;
+            padding: 20px;
+            width: 400px;
+            margin: 0 auto;
+            color: #333; /* Set text color for form container */
+        }
+
+        .label1, .label2 {
+            font-size: 20px;
+        }
+
+        .input-container {
+            width: 300px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.5s;
+            border: 2px solid transparent; /* Add border */
+        }
+
+        .input {
+            width: calc(100% - 16px); /* Adjust width to accommodate padding and border */
+            height: 3em; /* Adjust the height as needed */
+            padding: 8px;
+            outline: none;
+            background-color: #F3F3F3;
+            border-radius: 10px;
+            border: none;
+            transition: all 0.5s;
+        }
+
+        .input-container:hover,
+        .input-container:focus-within { /* Apply hover effect to container */
+            border-color: #4A9DEC;
+            box-shadow: 0px 0px 0px 3px rgba(74, 157, 236, 0.2); /* Adjust the box-shadow */
+        }
+
+        .input:hover,
+        .input:focus { /* Apply hover effect to input field */
+            background-color: white;
+        }
+
+        /* Custom button styles */
+        .file-upload-button {
+            background: #a370f0;
+            color: white;
+            font-family: inherit;
+            padding: 0.35em;
+            padding-left: 1.2em;
+            font-size: 17px;
+            font-weight: 500;
+            border-radius: 0.9em;
+            border: none;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            box-shadow: inset 0 0 1.6em -0.6em #714da6;
+            overflow: hidden;
+            position: relative;
+            height: 2.8em;
+            padding-right: 3.3em;
+            cursor: pointer;
+        }
+
+        .file-upload-button .icon {
+            background: white;
+            margin-left: 1em;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 2.2em;
+            width: 2.2em;
+            border-radius: 0.7em;
+            box-shadow: 0.1em 0.1em 0.6em 0.2em #7b52b9;
+            right: 0.3em;
+            transition: all 0.3s;
+        }
+
+        .file-upload-button:hover .icon {
+            width: calc(100% - 0.6em);
+        }
+
+        .file-upload-button .icon svg {
+            width: 1.1em;
+            transition: transform 0.3s;
+            color: #7b52b9;
+        }
+
+        .file-upload-button:hover .icon svg {
+            transform: translateX(0.1em);
+        }
+
+        .file-upload-button:active .icon {
+            transform: scale(0.95);
+        }
+
+        /* Hide the input file button */
+        #file-input {
+            display: none;
+        }
+
+        /* Custom submit button styles */
+        button {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            color: white;
+            background-color: #171717;
+            padding: 1em 2em;
+            border: none;
+            border-radius: .6rem;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        button span:not(:nth-child(6)) {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            height: 30px;
+            width: 30px;
+            background-color: #0c66ed;
+            border-radius: 50%;
+            transition: .6s ease;
+        }
+
+        button span:nth-child(6) {
+            position: relative;
+        }
+
+        button span:nth-child(1) {
+            transform: translate(-3.3em, -4em);
+        }
+
+        button span:nth-child(2) {
+            transform: translate(-6em, 1.3em);
+        }
+
+        button span:nth-child(3) {
+            transform: translate(-.2em, 1.8em);
+        }
+
+        button span:nth-child(4) {
+            transform: translate(3.5em, 1.4em);
+        }
+
+        button span:nth-child(5) {
+            transform: translate(3.5em, -3.8em);
+        }
+
+        button:hover span:not(:nth-child(6)) {
+            transform: translate(-50%, -50%) scale(4);
+            transition: 1.5s ease;
+        }
+
+        /* Loader styles */
+        .loader {
+            width: 95px;
+            height: 50px;
+            position: fixed;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            text-align:center;
+            z-index: 999; /* Ensure it's above other elements */
+            display: none; /* Initially hidden */
+        }
+
+        .loader-text {
+            position:relative;
+            top: 0;
+            padding: 0;
+            margin: 0;
+            color: #C8B6FF;
+            font-size: 1rem;
+            letter-spacing: 1.2px;
+        }
+
+        .load {
+            background-color:#a370f0;
+            border-radius: 50px;
+            display: block;
+            height: 16px;
+            width: 16px;
+            bottom: 0;
+            position:absolute;
+            transform: translateX(64px);
+            animation: loading_713 3.5s ease both infinite;
+        }
+
+        .load::before {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-color: #D1C2FF;
+            border-radius: inherit;
+            animation: loading2_713 3.5s ease both infinite;
+        }
+
+        @keyframes loading_713 {
+            0% {
+                width: 16px;
+                transform: translateX(0px);
+            }
+
+            40% {
+                width: 100%;
+                transform: translateX(0px);
+            }
+
+            80% {
+                width: 16px;
+                transform: translateX(64px);
+            }
+
+            90% {
+                width: 100%;
+                transform: translateX(0px);
+            }
+
+            100% {
+                width: 16px;
+                transform: translateX(0px);
+            }
+        }
+
+        @keyframes loading2_713 {
+            0% {
+                transform: translateX(0px);
+                width: 16px;
+            }
+
+            40% {
+                transform: translateX(0%);
+                width: 80%;
+            }
+
+            80% {
+                width: 100%;
+                transform: translateX(0px);
+            }
+
+            90% {
+                width: 80%;
+                transform: translateX(15px);
+            }
+
+            100% {
+                transform: translateX(0px);
+                width: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">Assistant for your cases</h1>
+    <div class="form-container">
+        <form class="form" action="/submit" method="post" enctype="multipart/form-data">
+            <label class="label1" for="text">Enter Your Client Name as in report:</label><br>
+            <div class="input-container"style="margin-top:10px">
+                <input class="input" type="text" id="text" name="text" placeholder="eg. Sam" checked>
+            </div>
+            <br>
+            <label class="label2" for="file"style="margin-top:10px">Upload Case Report PDF:</label><br>
+
+            <!-- Wrap the input file button with a label -->
+            <label for="file-input" class="file-upload-button"style="margin-top: 10px;">
+                <span id="file-name-display">Upload Case Report PDF</span>
+                <div class="icon">
+                    <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
+                    </svg>
+                </div>
+            </label>
+            <!-- Actual file input field -->
+            <input type="file" id="file-input" name="file" accept=".pdf" onchange="displayFileName()">
+            <br><br><br>
+            <!-- Custom submit button -->
+            <button type="submit" onclick="showLoader()">
+                <span class="circle1"></span>
+                <span class="circle2"></span>
+                <span class="circle3"></span>
+                <span class="circle4"></span>
+                <span class="circle5"></span>
+                <span class="text">Submit</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader"style="display: none; position: absolute; top: 80%; left: 48%; transform: translate(-50%, -50%);">
+
+        <span class="loader-text">loading</span>
+        <span class="load"></span>
+    </div>
+
+    <script>
+        function displayFileName() {
+            const fileInput = document.getElementById('file-input');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const fileName = fileInput.files[0].name;
+            fileNameDisplay.textContent = fileName;
+        }
+
+        function showLoader() {
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
